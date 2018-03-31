@@ -1,0 +1,34 @@
+{
+    "extends": [
+        "tslint-angular",
+        "tslint:latest",
+        "tslint-microsoft-contrib"
+    ],
+    "rules": {
+        "semicolon": [true, "never"],
+        "quotemark": [true, "double"],
+        "no-multiline-string": false,
+        "export-name": false,
+        "directive-selector": [true, "attribute", ["they"], "camelCase"],
+        "component-selector": [true, "element", ["they"], "kebab-case"],
+        "trailing-comma": [true,  {"multiline": "always"}],
+        "stateless-class": false,
+        "no-submodule-imports": false,
+        "no-implicit-dependencies": false,
+        "missing-jsdoc": false,
+        "no-stateless-class": false,
+        "completed-docs": false,
+        "typedef": [true, "call-signature", "parameter", "member-variable-declaration", "property-declaration"],
+        "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+        "no-parameter-properties": false,
+        "no-unnecessary-class": false,
+        "no-unused-imports": true,
+        "no-reserved-keywords": false,
+        "interface-name": false,
+        "no-unsafe-any": false,
+        "function-name": "^[a-z][\\w\\d]+$"
+    },
+    "linterOptions": {
+        "exclude": "(!src)/**"
+    }
+}

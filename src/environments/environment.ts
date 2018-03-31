@@ -4,5 +4,17 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
-};
+    production: false,
+    endpoints: {
+        sfmaps: {
+            arteries: "assets/mocks/sfmaps/arteries.json",
+            freeways: "assets/mocks/sfmaps/freeways.json",
+            neighborhoods: "assets/mocks/sfmaps/neighborhoods.json",
+            streets: "assets/mocks/sfmaps/streets.json",
+            // tslint:disable no-http-string
+            routeList: "http://webservices.nextbus.com/service/publicJSONFeed?command=routeList&a=sf-muni",
+            vehicleLocations: "http://webservices.nextbus.com/service/publicJSONFeed?command=vehicleLocations&a=sf-muni",
+            // tslint:enable no-http-string
+        },
+    },
+}
