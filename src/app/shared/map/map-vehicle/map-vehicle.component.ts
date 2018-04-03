@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core"
+import { ChangeDetectionStrategy, Component } from "@angular/core"
 
 @Component({
     // tslint:disable-next-line disable component-selector
@@ -11,11 +11,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core"
     styles: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapVehicleComponent implements OnInit {
-
-    constructor() { }
-
-    ngOnInit() {
-    }
+export class MapVehicleComponent {
 
 }

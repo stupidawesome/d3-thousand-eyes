@@ -26,7 +26,8 @@
         "no-reserved-keywords": false,
         "interface-name": false,
         "no-unsafe-any": false,
-        "function-name": "^[a-z][\\w\\d]+$"
+        "function-name": "^[a-z][\\w\\d]+$",
+        "no-this-assignment": false
     },
     "linterOptions": {
         "exclude": "(!src)/**"

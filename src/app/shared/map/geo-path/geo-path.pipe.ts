@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core"
-import { geoPath, GeoProjection } from "d3-geo"
+import { GeoPath, GeoPermissibleObjects } from "d3-geo"
 import { LineString } from "geojson"
 
 @Pipe({
@@ -7,7 +7,7 @@ import { LineString } from "geojson"
     pure: true,
 })
 export class GeoPathPipe implements PipeTransform {
-    public transform(geometry: LineString, projection?: GeoProjection): string | null {
-        return geoPath(projection)(geometry)
+    public transform(geometry: LineString, path: GeoPath<void, GeoPermissibleObjects>): string | null {
+        return path(geometry)
     }
 }
