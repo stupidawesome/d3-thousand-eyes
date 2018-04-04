@@ -33,6 +33,7 @@
             "@they/core/*": ["app/core/*"],
             "@they/shared/*": ["app/shared/*"]
         }
+
     },
     "angularCompilerOptions": {
         "fullTemplateTypeCheck": true,

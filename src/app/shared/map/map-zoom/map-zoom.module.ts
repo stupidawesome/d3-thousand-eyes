@@ -1,13 +1,14 @@
 import { CommonModule } from "@angular/common"
 import { NgModule } from "@angular/core"
-import { ApplyZoomPipe } from "@they/shared/map/map-zoom/apply-zoom.pipe"
+import { MapPipesModule } from "@they/shared/map-pipes/map-pipes.module"
 import { MapZoomDirective } from "@they/shared/map/map-zoom/map-zoom.directive"
 
 @NgModule({
     imports: [
         CommonModule,
+        MapPipesModule,
     ],
-    declarations: [MapZoomDirective, ApplyZoomPipe],
-    exports: [MapZoomDirective, ApplyZoomPipe],
+    declarations: [MapZoomDirective],
+    exports: [MapZoomDirective],
 })
 export class MapZoomModule {}

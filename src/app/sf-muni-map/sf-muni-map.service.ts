@@ -8,19 +8,21 @@ import { GeometryCollection, Topology } from "topojson"
 
 const { sfmaps } = environment.endpoints
 
+export type SfMuniTopology = Topology<{collection: GeometryCollection}>
+
 @Injectable()
 export class SfMuniMapService {
-    public arteries$: Observable<Topology<{arteries: GeometryCollection}>>
-        = this.http.get<Topology<{arteries: GeometryCollection}>>(sfmaps.arteries)
+    public arteries$: Observable<SfMuniTopology>
+        = this.http.get<SfMuniTopology>(sfmaps.arteries)
 
-    public freeways$: Observable<Topology<{freeways: GeometryCollection}>>
-        = this.http.get<Topology<{freeways: GeometryCollection}>>(sfmaps.freeways)
+    public freeways$: Observable<SfMuniTopology>
+        = this.http.get<SfMuniTopology>(sfmaps.freeways)
 
-    public neighborhoods$: Observable<Topology<{neighborhoods: GeometryCollection}>>
-        = this.http.get<Topology<{neighborhoods: GeometryCollection}>>(sfmaps.neighborhoods)
+    public neighborhoods$: Observable<SfMuniTopology>
+        = this.http.get<SfMuniTopology>(sfmaps.neighborhoods)
 
-    public streets$: Observable<Topology<{streets: GeometryCollection}>>
-        = this.http.get<Topology<{streets: GeometryCollection}>>(sfmaps.streets)
+    public streets$: Observable<SfMuniTopology>
+        = this.http.get<SfMuniTopology>(sfmaps.streets)
 
     public routeList$: Observable<RouteList> = this.http.get<RouteList>(sfmaps.routeList)
 

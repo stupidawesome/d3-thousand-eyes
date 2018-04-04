@@ -1,15 +1,17 @@
 import {
     ChangeDetectionStrategy,
-    Component,
-    ElementRef,
+    Component, ContentChildren,
     Input,
-    OnChanges,
+    OnChanges, OnInit,
+    QueryList,
     SimpleChanges,
-    ViewChild,
+    TemplateRef,
+    ViewChildren,
 } from "@angular/core"
+import { MapFeatureComponent } from "@they/shared/map/map-feature/map-feature.component"
+import { MapFeatureDirective } from "@they/shared/map/map-feature/map-feature.directive"
 import { MapZoom } from "@they/shared/map/map-zoom/map-zoom.directive"
 import { geoAlbers, GeoPath, geoPath, GeoPermissibleObjects, GeoProjection } from "d3-geo"
-import { GeometryCollection, Topology } from "topojson"
 
 export interface MapOptions {
     scale: number
@@ -26,37 +28,19 @@ const defaults: MapOptions = {
     center: [0, 37.7749], // latitude (left/right)
     translate: [300, 200],
     projection: geoAlbers(),
-    scaleExtent: [4, 12],
+    scaleExtent: [2, 12],
 }
-
-export type VisibleAreaCoords = [[number, number], [number, number]]
 
 @Component({
     selector: "they-map",
     template: `
         <svg [theyMapZoom]="scaleExtent" (zoom)="handleZoom($event)" #svg>
             <svg:g [attr.transform]="mapZoom.transform">
-                <svg:g
-                    [theyMapNeighborhood]="neighbourhoods"
-                    [mapZoom]="mapZoom"
-                    [path]="path"
-                ></svg:g>
-                <svg:g
-                    [theyMapArtery]="arteries"
-                    [mapZoom]="mapZoom"
-                    [path]="path"
-                ></svg:g>
-                <svg:g
-                    *ngIf="mapZoom.transform.k > 8"
-                    [theyMapStreet]="streets"
-                    [mapZoom]="mapZoom"
-                    [path]="path"
-                ></svg:g>
-                <svg:g
-                    [theyMapFreeway]="freeways"
-                    [mapZoom]="mapZoom"
-                    [path]="path"
-                ></svg:g>
+                <ng-container
+                    *ngFor="let feature of features"
+                    [ngTemplateOutlet]="feature.template"
+                    [ngTemplateOutletContext]="{ mapZoom: mapZoom, path: path }"
+                ></ng-container>
             </svg:g>
         </svg>
     `,
@@ -70,7 +54,7 @@ export type VisibleAreaCoords = [[number, number], [number, number]]
     `],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent implements OnChanges, MapOptions {
+export class MapComponent implements OnInit, OnChanges, MapOptions {
 
     @Input()
     public scale: number = defaults.scale
@@ -88,32 +72,24 @@ export class MapComponent implements OnChanges, MapOptions {
     public projection: GeoProjection = defaults.projection
 
     @Input()
-    public neighbourhoods: Topology<{ neighbourhoods: GeometryCollection }>
-
-    @Input()
-    public streets: Topology<{ streets: GeometryCollection }>
-
-    @Input()
-    public arteries: Topology<{ arteries: GeometryCollection }>
-
-    @Input()
-    public freeways: Topology<{ freeways: GeometryCollection }>
-
-    @Input()
     public scaleExtent: [number, number] = defaults.scaleExtent
-
-    @ViewChild("svg", {read: ElementRef})
-    public svgReg: ElementRef
 
     public mapZoom: MapZoom
 
     public path: GeoPath<this, GeoPermissibleObjects>
 
+    @ContentChildren(MapFeatureComponent)
+    public features: QueryList<MapFeatureComponent>
+
+    public ngOnInit(): void {
+        this.configureMapProjection()
+    }
+
     public ngOnChanges(changes: SimpleChanges): void {
         this.configureMapProjection()
     }
 
-    protected handleZoom(event: MapZoom): void {
+    public handleZoom(event: MapZoom): void {
         this.mapZoom = event
     }
 
@@ -127,6 +103,5 @@ export class MapComponent implements OnChanges, MapOptions {
             .translate(translate)
 
         this.path = geoPath(this.projection)
-
     }
 }

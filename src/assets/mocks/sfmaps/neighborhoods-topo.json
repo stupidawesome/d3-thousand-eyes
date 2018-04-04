@@ -1,7 +1,7 @@
 {
     "type": "Topology",
     "objects": {
-        "neighborhoods": {
+        "collection": {
             "type": "GeometryCollection",
             "geometries": [
                 {
