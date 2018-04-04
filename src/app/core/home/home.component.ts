@@ -7,13 +7,33 @@ import { Observable } from "rxjs/Observable"
 @Component({
     selector: "they-home",
     template: `
-        <h1>Home Page</h1>
-        <p>Hello</p>
-        <p>Ready: {{ ready$ | async }}</p>
+        <div>
+            <h1>D3 Thousand Eyes</h1>
+            <a href="/sf-muni-map">-&gt; Load the Map &lt;-</a>
+        </div>
     `,
     styles: [`
         :host {
-            color: red;
+            display: flex;
+            height: 100%;
+            color: black;
+        }
+
+        div {
+            margin: auto;
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            height: 4rem;
+            font-size: 2rem;
+            font-weight: 900;
+            font-family: system, Verdana, sans-serif;
+            color: white;
+            background: dodgerblue;
+            text-decoration: none;
+            line-height: 4rem;
         }
     `],
 })

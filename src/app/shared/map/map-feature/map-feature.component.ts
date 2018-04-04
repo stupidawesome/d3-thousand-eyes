@@ -10,7 +10,6 @@ const defaults = {
 }
 
 @Component({
-    // tslint:disable-next-line disable component-selector
     selector: "they-map-feature",
     template: `
         <ng-container *theyMapFeature="let mapZoom = mapZoom; let path = path">

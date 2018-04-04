@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from "@angular/core"
-import { filterVisibleCollection, simplifyTopology } from "@they/shared/map/map-utils"
-import { VisibleBounds } from "@they/shared/map/map-zoom/map-zoom.directive"
-import { isNullOrUndefined } from "@they/util/util"
+import { filterVisibleCollection } from "app/shared/map/map-utils"
+import { VisibleBounds } from "app/shared/map/map-zoom/map-zoom.directive"
 import { GeoPath } from "d3-geo"
 import { FeatureCollection, GeometryObject } from "geojson"
 

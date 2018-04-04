@@ -9,23 +9,24 @@ export function filterVisibleCollection(
     path: GeoPath<void, GeometryObject>,
     visibleBounds: VisibleBounds,
 ): FeatureCollection<GeometryObject> {
+
+    const visibleRect = {
+        left: visibleBounds[0][0],
+        top: visibleBounds[0][1],
+        right: visibleBounds[1][0],
+        bottom: visibleBounds[1][1],
+    }
+
     const features = collection.features.filter((feat) => {
         const bounds = path.bounds(feat.geometry)
+        const rect = {
+            left: bounds[0][0],
+            top: bounds[0][1],
+            right: bounds[1][0],
+            bottom: bounds[1][1],
+        }
 
-        return intersectRect(
-            {
-                left: bounds[0][0],
-                top: bounds[0][1],
-                right: bounds[1][0],
-                bottom: bounds[1][1],
-            },
-            {
-                left: visibleBounds[0][0],
-                top: visibleBounds[0][1],
-                right: visibleBounds[1][0],
-                bottom: visibleBounds[1][1],
-            },
-        )
+        return intersectRect(rect, visibleRect)
     })
 
     return {

@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core"
-import { VehicleLocations } from "@they/sf-muni-map/interfaces/vehicle-location.interface"
+import { Vehicle } from "@they/interfaces/vehicle-location.interface"
 import { SfMuniMapService, SfMuniTopology } from "@they/sf-muni-map/sf-muni-map.service"
 import { Observable } from "rxjs/Observable"
+import { empty } from "rxjs/observable/empty"
+import { of } from "rxjs/observable/of"
 import { zip } from "rxjs/observable/zip"
-import { map, shareReplay } from "rxjs/operators"
+import { catchError, map, shareReplay } from "rxjs/operators"
 
 interface FeatureProperties {
     stroke: string
@@ -51,6 +53,12 @@ function propertiesToTopology(topology: SfMuniTopology[]): MapFeature[] {
     selector: "they-sf-muni-map",
     template: `
         <they-map *ngIf="map$ | async as map">
+            <they-map-landmark
+                *ngFor="let vehicle of vehicles$ | async; trackBy: trackById"
+                [plot]="[vehicle.lon, vehicle.lat]"
+            >
+                <svg class="bus" they-bus (click)="didClickVehicle(vehicle)"></svg>
+            </they-map-landmark>
             <they-map-feature
                 *ngFor="let feature of map"
                 [topology]="feature.topology"
@@ -64,8 +72,16 @@ function propertiesToTopology(topology: SfMuniTopology[]): MapFeature[] {
     styles: [`
         :host {
             display: block;
+            position: relative;
             height: 100%;
             width: 100%;
+        }
+
+        .bus {
+            width: 20px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+            transform-origin: 0 0;
         }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,11 +94,32 @@ export class SfMuniMapComponent {
         this.muniMap.arteries$,
         this.muniMap.freeways$,
     ).pipe(
+        catchError((e) => {
+            console.error(`Couldn't load map`, e)
+
+            return empty()
+        }),
         map(propertiesToTopology),
         shareReplay(),
     )
 
-    public vehicles$: Observable<VehicleLocations>
+    public vehicles$: Observable<Vehicle[]> = this.muniMap.vehicles$.pipe(
+        catchError((e) => {
+            console.error(`Couldn't load vehicles`, e)
+
+            return of([])
+        }),
+        shareReplay(),
+    )
 
     constructor(private muniMap: SfMuniMapService) {}
+
+    public didClickVehicle(vehicle: Vehicle): void {
+        // tslint:disable-next-line no-console
+        console.log("Clicked a bus", vehicle)
+    }
+
+    public trackById(vehicle: Vehicle): string {
+        return vehicle.id
+    }
 }

@@ -1,4 +1,4 @@
-import { Environment } from "@they/sf-muni-map/interfaces/environment.interface"
+import { Environment } from "@they/interfaces/environment.interface"
 
 export const environment: Environment = {
     production: false,

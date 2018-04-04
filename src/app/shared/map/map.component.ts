@@ -1,15 +1,16 @@
 import {
     ChangeDetectionStrategy,
-    Component, ContentChildren,
+    Component,
+    ContentChildren,
     Input,
-    OnChanges, OnInit,
+    OnChanges,
+    OnInit,
     QueryList,
     SimpleChanges,
     TemplateRef,
-    ViewChildren,
 } from "@angular/core"
 import { MapFeatureComponent } from "@they/shared/map/map-feature/map-feature.component"
-import { MapFeatureDirective } from "@they/shared/map/map-feature/map-feature.directive"
+import { MapLandmarkComponent } from "@they/shared/map/map-landmark/map-landmark.component"
 import { MapZoom } from "@they/shared/map/map-zoom/map-zoom.directive"
 import { geoAlbers, GeoPath, geoPath, GeoPermissibleObjects, GeoProjection } from "d3-geo"
 
@@ -26,7 +27,7 @@ const defaults: MapOptions = {
     scale: 500000,
     rotate: [122.4194, 0], // longitude (up/down)
     center: [0, 37.7749], // latitude (left/right)
-    translate: [300, 200],
+    translate: [900, 600],
     projection: geoAlbers(),
     scaleExtent: [2, 12],
 }
@@ -34,21 +35,33 @@ const defaults: MapOptions = {
 @Component({
     selector: "they-map",
     template: `
-        <svg [theyMapZoom]="scaleExtent" (zoom)="handleZoom($event)" #svg>
-            <svg:g [attr.transform]="mapZoom.transform">
+        <svg class="layer">
+            <svg:g [attr.transform]="mapZoom.transform" [theyMapZoom]="scaleExtent" (zoom)="handleZoom($event)">
                 <ng-container
                     *ngFor="let feature of features"
                     [ngTemplateOutlet]="feature.template"
-                    [ngTemplateOutletContext]="{ mapZoom: mapZoom, path: path }"
+                    [ngTemplateOutletContext]="{ mapZoom: mapZoom, path: path, projection: projection }"
                 ></ng-container>
             </svg:g>
         </svg>
+        <div class="layer" [theyMapZoom]="scaleExtent" (zoom)="handleZoom($event)">
+            <ng-container
+                *ngFor="let landmark of landmarks.changes | async | visibleLandmarks: mapZoom: projection; trackBy: trackByTemplate"
+                [ngTemplateOutlet]="landmark.template"
+                [ngTemplateOutletContext]="{ mapZoom: mapZoom, path: path, projection: projection }"
+            ></ng-container>
+        </div>
     `,
     styles: [`
-        svg {
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
-            transform-origin: 0 0;
+            transform-origin: 50% 50%;
             transform: translate3d(0, 0, 0);
         }
     `],
@@ -81,6 +94,9 @@ export class MapComponent implements OnInit, OnChanges, MapOptions {
     @ContentChildren(MapFeatureComponent)
     public features: QueryList<MapFeatureComponent>
 
+    @ContentChildren(MapLandmarkComponent)
+    public landmarks: QueryList<MapLandmarkComponent>
+
     public ngOnInit(): void {
         this.configureMapProjection()
     }
@@ -91,6 +107,10 @@ export class MapComponent implements OnInit, OnChanges, MapOptions {
 
     public handleZoom(event: MapZoom): void {
         this.mapZoom = event
+    }
+
+    public trackByTemplate(component: MapLandmarkComponent): TemplateRef<Element> {
+        return component.template
     }
 
     private configureMapProjection(): void {

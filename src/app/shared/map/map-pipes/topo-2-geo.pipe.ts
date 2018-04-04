@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core"
-import { simplifyTopology } from "@they/shared/map/map-utils"
+import { simplifyTopology } from "app/shared/map/map-utils"
 import { FeatureCollection, GeometryObject } from "geojson"
 import { feature, GeometryCollection, planarTriangleArea, Topology } from "topojson"
 
