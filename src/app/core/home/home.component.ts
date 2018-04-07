@@ -9,7 +9,7 @@ import { Observable } from "rxjs/Observable"
     template: `
         <div>
             <h1>D3 Thousand Eyes</h1>
-            <a href="/sf-muni-map">-&gt; Load the Map &lt;-</a>
+            <a href="sf-muni-map">-&gt; Load the Map &lt;-</a>
         </div>
     `,
     styles: [`
